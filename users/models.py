@@ -1,7 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from django.utils.translation import gettext_lazy as _
 # Create your models here.
 
 
@@ -31,6 +31,17 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    class rol(models.TextChoices):
+        ANONIMO = 'AN', _('anonimo')
+        NORMAL = 'NR', _('normal')
+        ADMIN = 'AD', _('admin')
+
+    rol = models.CharField(
+        max_length=2,
+        choices=rol.choices,
+        default=rol.ANONIMO,
+    )
+
     id = models.AutoField(primary_key=True)
     email = models.CharField(max_length=80, unique=True, default="no@email.com")
     username = models.CharField(max_length=45)

@@ -9,6 +9,9 @@ from .serializers import SignUpSerializer, GetUserSerializer
 from .tokens import create_jwt_pair_for_user
 from rest_framework import viewsets
 from .models import User
+
+from pagos.tasks import comprobar_expiracion
+
 from django.shortcuts import redirect
 # Create your views here.
 
@@ -42,7 +45,7 @@ class LoginView(APIView):
             tokens = create_jwt_pair_for_user(user)
             idUser = User.objects.get(email=email)
             response = {"message": "Logeado correctamente", "id": idUser.id ,"tokens": tokens}
-
+            #comprobar_expiracion.delay()
             return Response(data=response, status=status.HTTP_200_OK)
 
         else:

@@ -16,6 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 from .pagination import StandardResultsSetPagination
 from rest_framework import viewsets, filters
 
+from rest_framework import mixins
 # class PagoViewSet(viewsets.ModelViewSet):
 #     queryset = Pagos.objects.get_queryset().order_by('id')
 #     serializer_class = PagoSerializer
@@ -29,7 +30,7 @@ from rest_framework import viewsets, filters
 #Services api
 
 #serviceViewset
-class ServicesViewSet(viewsets.ModelViewSet):
+class ServicesViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Services.objects.get_queryset().order_by('id')
     serializer_class = ServiceSerializer
     pagination_class = StandardResultsSetPagination
@@ -47,15 +48,17 @@ class Payment_userViewSet(viewsets.ModelViewSet):
     pagination_class = StandardResultsSetPagination
     filter_backends = [filters.SearchFilter]
     permission_classes = [IsAuthenticated]
-
+    search_fields=['paymentDate','expirationDate']
     #search_fields = ['usuario__id', 'fecha_pago', 'servicio']
-    #throttle_scope = 'pagos'
+    throttle_scope = 'payment_user'
 
 
 #Expired_paymentsViewset
-class Expired_paymentsViewSet(viewsets.ModelViewSet):
+class Expired_paymentsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+viewsets.GenericViewSet):
     queryset = Expired_payments.objects.get_queryset().order_by('id')
     serializer_class = Expired_paymentsSerializer
     pagination_class = StandardResultsSetPagination
     filter_backends = [filters.SearchFilter]
     permission_classes = [IsAuthenticated]
+    throttle_scope = 'expired_payments'

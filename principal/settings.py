@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-wtqmd8ifb%7ksovbu4ubigf=zdooq+c+y6sc$af8^ikhe)3_@k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -40,20 +40,31 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
+    #documentacion
+    #'django.contrib.staticfiles', omitido ya tengo añadido
+    'drf_yasg',
+
     'users',
     'pagos',
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+     #Django Cors Headers Middleware
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #django default middleware
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
+#ALLOWED_HOSTS = ["http://127.0.0.1:5500"]
+CORS_ALLOW_ALL_ORIGINS=True
 ROOT_URLCONF = 'principal.urls'
 
 TEMPLATES = [
@@ -142,9 +153,17 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_THROTTLE_RATES': {
         'pagos': '1000/day',
+        'payment_user':'1000/day',
+        'expired_payments':'1000/day'
+        #'payment_user': '2000/day',
+        #'expired_payments':'2000/day'
 
     }
 }
+
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
 
 CACHES = {
     'default': {

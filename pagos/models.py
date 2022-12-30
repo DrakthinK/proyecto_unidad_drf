@@ -46,7 +46,7 @@ class Payment_user(models.Model):
     service= models.ForeignKey(Services,on_delete=models.CASCADE)
     amount=models.FloatField(default=0.0)
     paymentDate=models.DateField(auto_now_add=True)
-    expirationDate=models.DateField(auto_now_add=True)
+    expirationDate=models.DateField()
 
 # Expired_payments
 # - Id
@@ -62,3 +62,4 @@ class Expired_payments(models.Model):
 # - Email
 # - Username
 # - Password
+
